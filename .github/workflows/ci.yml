@@ -55,16 +55,15 @@ jobs:
       - name: Push Docker image
         run: docker push naveeth007/chatbot:latest
 
-  jobs:
-    scan:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-        - name: Run gosec
-          uses: securego/gosec@master
-          with:
-            args: ./...
+      - name: Run gosec
+        uses: securego/gosec@master
+        with:
+          args: ./...
 
-        - name: Dependency audit
-          run: go mod download && go list -json -m all | nancy sleuth
+      - name: Dependency audit
+        run: go mod download && go list -json -m all | nancy sleuth
