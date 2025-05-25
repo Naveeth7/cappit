@@ -26,9 +26,9 @@ func TestChatbotHandler(t *testing.T) {
 		Input: "Hello",
 	}
 
-	jsonReq, err := json.Marshal(input)
-	if err != nil {
-		t.Fatal(err)
+	jsonReq, er := json.Marshal(input)
+	if er != nil {
+		t.Fatal(er)
 	}
 
 	testcases := []struct {
