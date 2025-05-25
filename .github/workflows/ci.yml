@@ -30,6 +30,7 @@ jobs:
         with:
           version: latest
           args: run ./...
+          format: colored-line-number
 
       - name: Build Docker image
         run: docker build -t naveeth007/chatbot:latest .
