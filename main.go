@@ -1,12 +1,13 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/Chatbot/handler"
 	"github.com/Chatbot/logger"
 	"github.com/Chatbot/middleware"
 	"github.com/Chatbot/service"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 func main() {
