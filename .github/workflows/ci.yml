@@ -25,6 +25,19 @@ jobs:
       - name: Run tests
         run: go test ./... -v
 
+      - name: Run tests with coverage
+        run: |
+          go test ./... -coverprofile=coverage.out
+          go tool cover -func=coverage.out | tee coverage.txt
+          total=$(go tool cover -func=coverage.out | grep total: | awk '{print substr($3, 1, length($3)-1)}')
+          echo "Total Coverage: $total%"
+          threshold=96.0
+          result=$(echo "$total >= $threshold" | bc)
+          if [ "$result" -ne 1 ]; then
+            echo "❌ Coverage $total% is below the threshold of $threshold%"
+            exit 1
+          fi
+
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v3
         with:
@@ -41,3 +54,17 @@ jobs:
 
       - name: Push Docker image
         run: docker push naveeth007/chatbot:latest
+
+  jobs:
+    scan:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Run gosec
+          uses: securego/gosec@master
+          with:
+            args: ./...
+
+        - name: Dependency audit
+          run: go mod download && go list -json -m all | nancy sleuth
