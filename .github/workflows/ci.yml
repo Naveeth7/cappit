@@ -65,11 +65,13 @@ jobs:
         with:
           args: ./...
 
-      - name: Install Nancy
+      - name: Install Nancy (pre-built)
         run: |
-          curl -L https://github.com/sonatype-nexus-community/nancy/releases/latest/download/nancy-linux.amd64 -o nancy
+          # Get the latest release URL (avoids HTML page download)
+          NANCY_URL=$(curl -s https://api.github.com/repos/sonatype-nexus-community/nancy/releases/latest | grep "browser_download_url.*linux.amd64" | cut -d '"' -f 4)
+          curl -L -o nancy "$NANCY_URL"
           chmod +x nancy
-          ./nancy --version
+          ./nancy --version  # Verify installation
 
       - name: Dependency audit
         run: go list -json -m all | ./nancy sleuth
