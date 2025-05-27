@@ -65,13 +65,13 @@ jobs:
         with:
           go-version: 1.22
 
-      - name: Install Nancy
-        run: go install github.com/sonatype-nexus-community/nancy@latest
-
       - name: Run gosec
         uses: securego/gosec@master
         with:
           args: ./...
 
-      - name: Dependency audit
-        run: go list -json -m all | ./nancy sleuth
+      - name: Write Go List
+        run: go list -json -m all > go.list
+
+      - name: Dependency Scan
+        uses: sonatype-nexus-community/nancy-github-action@main
