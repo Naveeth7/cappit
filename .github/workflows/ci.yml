@@ -66,6 +66,7 @@ jobs:
         uses: sonatype-nexus-community/nancy-github-action@main
 
   dockerize:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     needs:
       - build-and-test
