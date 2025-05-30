@@ -10,11 +10,11 @@ import (
 )
 
 type Message struct {
-	Input string `json:"input"`
+	Input string `json:"message"`
 }
 
 type Response struct {
-	Reply string `json:"reply"`
+	Reply string `json:"response"`
 }
 
 type ChatbotHandler struct {
