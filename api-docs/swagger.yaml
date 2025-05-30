@@ -1,0 +1,64 @@
+openapi: 3.0.3
+info:
+  title: Chatbot API
+  description: API documentation for the chatbot service
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /chat:
+    post:
+      summary: Send a message to the chatbot
+      operationId: chatMessage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+            example:
+              message: "hello"
+      responses:
+        '200':
+          description: Chatbot response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatResponse'
+              example:
+                response: "Hi there! How can I help you today?"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Invalid input"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                error: "Something went wrong"
+components:
+  schemas:
+    ChatRequest:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    ChatResponse:
+      type: object
+      properties:
+        response:
+          type: string
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
