@@ -1,12 +1,14 @@
 package main
 
 import (
-	"net/http"
+	"os"
 
 	"github.com/Chatbot/handler"
 	"github.com/Chatbot/logger"
 	"github.com/Chatbot/middleware"
+	"github.com/Chatbot/routes"
 	"github.com/Chatbot/service"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
 
@@ -19,14 +21,11 @@ func main() {
 	botService := service.NewBotService()
 	chatHandler := handler.NewChatbotHandler(botService)
 
-	e.POST("/chat", func(c echo.Context) error {
-		resp, err := chatHandler.HandleChat(c)
-		if err != nil {
-			return err
-		}
-		return c.JSON(http.StatusOK, resp)
-	})
+	routes.RegisterRoutes(e, chatHandler)
+	if err := godotenv.Load("config/.env"); err != nil {
+		e.Logger.Fatal(err)
+	}
 
-	e.Logger.Print("Starting GoBot on http://localhost:8080")
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Print("Starting GoBot on http://localhost:" + os.Getenv("PORT"))
+	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))
 }
