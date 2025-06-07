@@ -1,64 +1,168 @@
-openapi: 3.0.3
+openapi: 3.0.0
 info:
-  title: Chatbot API
-  description: API documentation for the chatbot service
+  title: Cappit
+  description: Hosted API key & rate limit manager with proxy capabilities
   version: 1.0.0
+
 servers:
-  - url: http://localhost:8080
+  - url: https://api.cappit.com/v1
+
+tags:
+  - name: Auth
+  - name: API Keys
+  - name: Rate Limits
+  - name: Proxy
+
 paths:
-  /chat:
+  /auth/register:
     post:
-      summary: Send a message to the chatbot
-      operationId: chatMessage
+      tags: [Auth]
+      summary: Register new user
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChatRequest'
-            example:
-              message: "hello"
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: Created
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login and receive JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
       responses:
         '200':
-          description: Chatbot response
+          description: JWT token
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChatResponse'
-              example:
-                response: "Hi there! How can I help you today?"
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                error: "Invalid input"
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                error: "Something went wrong"
+                type: object
+                properties:
+                  token:
+                    type: string
+
+  /apikeys:
+    get:
+      tags: [API Keys]
+      summary: List API keys for user
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of API keys
+
+    post:
+      tags: [API Keys]
+      summary: Create new API key
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, base_url]
+              properties:
+                name:
+                  type: string
+                base_url:
+                  type: string
+      responses:
+        '201':
+          description: API key created
+
+  /apikeys/{id}:
+    delete:
+      tags: [API Keys]
+      summary: Delete API key
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+
+  /apikeys/{id}/limits:
+    put:
+      tags: [Rate Limits]
+      summary: Set or update rate limits
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                per_minute:
+                  type: integer
+                per_hour:
+                  type: integer
+                per_day:
+                  type: integer
+                per_month:
+                  type: integer
+      responses:
+        '200':
+          description: Updated
+
+  /proxy/{apikey}/{path}:
+    get:
+      tags: [Proxy]
+      summary: Forward GET request to backend if within limits
+      parameters:
+        - name: apikey
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: path
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Proxied response
+        '429':
+          description: Rate limit exceeded
+
 components:
-  schemas:
-    ChatRequest:
-      type: object
-      properties:
-        message:
-          type: string
-      required:
-        - message
-    ChatResponse:
-      type: object
-      properties:
-        response:
-          type: string
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
