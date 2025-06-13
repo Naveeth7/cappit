@@ -1,9 +1,9 @@
 services:
-  chatbot:
+  cappit:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: chatbot
+    container_name: cappit
     ports:
       - "8080:8080"
     restart: unless-stopped

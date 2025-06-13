@@ -7,12 +7,12 @@ test:  ## Run Go tests
 	docker-compose run --rm test
 
 .PHONY: build
-build:  ## Build the chatbot Docker image
-	docker-compose build chatbot
+build:  ## Build the cappit Docker image
+	docker-compose build cappit
 
 .PHONY: up
-up:  ## Start the chatbot service
-	docker-compose up -d chatbot
+up:  ## Start the cappit service
+	docker-compose up -d cappit
 
 .PHONY: down
 down:  ## Stop and remove all services

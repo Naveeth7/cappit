@@ -3,8 +3,8 @@ package routes
 import (
 	"net/http"
 
-	"github.com/Chatbot/auth"
-	"github.com/Chatbot/handler"
+	"github.com/cappit/auth"
+	"github.com/cappit/handler"
 	"github.com/labstack/echo/v4"
 )
 
