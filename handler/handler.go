@@ -3,8 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/Chatbot/logger"
-	"github.com/Chatbot/service"
+	"github.com/cappit/logger"
+	"github.com/cappit/service"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/zap"
 )

@@ -3,11 +3,11 @@ package main
 import (
 	"os"
 
-	"github.com/Chatbot/handler"
-	"github.com/Chatbot/logger"
-	"github.com/Chatbot/middleware"
-	"github.com/Chatbot/routes"
-	"github.com/Chatbot/service"
+	"github.com/cappit/handler"
+	"github.com/cappit/logger"
+	"github.com/cappit/middleware"
+	"github.com/cappit/routes"
+	"github.com/cappit/service"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
