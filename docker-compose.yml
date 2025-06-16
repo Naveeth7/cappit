@@ -22,3 +22,27 @@ services:
     working_dir: /app
     command: golangci-lint run --timeout 1m ./...
 
+
+  postgres:
+    image: postgres:15
+    container_name: cappit_postgres
+    environment:
+      POSTGRES_USER: cappit
+      POSTGRES_PASSWORD: cappitpass
+      POSTGRES_DB: cappitdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  redis:
+    image: redis:7
+    container_name: cappit_redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+volumes:
+  postgres_data:
+

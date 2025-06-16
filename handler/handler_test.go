@@ -3,11 +3,11 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/cappit/internal/logger"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
-	"github.com/cappit/logger"
 	"github.com/cappit/service"
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"

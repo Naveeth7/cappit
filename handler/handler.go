@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"github.com/cappit/internal/logger"
 	"net/http"
 
-	"github.com/cappit/logger"
 	"github.com/cappit/service"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/zap"
