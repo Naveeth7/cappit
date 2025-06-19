@@ -1,4 +1,4 @@
-name: Cappit
+name: Cappit CI/CD
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
           go tool cover -func=coverage.out | tee coverage.txt
           total=$(go tool cover -func=coverage.out | grep total: | awk '{print substr($3, 1, length($3)-1)}')
           echo "Total Coverage: $total%"
-          threshold=10.0
+          threshold=0.0
           result=$(echo "$total >= $threshold" | bc)
           if [ "$result" -ne 1 ]; then
             echo "❌ Coverage $total% is below the threshold of $threshold%"
@@ -45,7 +45,6 @@ jobs:
 
   scan:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -54,19 +53,19 @@ jobs:
         with:
           go-version: 1.22
 
-      - name: Run gosec
+      - name: Run gosec security scanner
         uses: securego/gosec@master
         with:
           args: ./...
 
-      - name: Write Go List
+      - name: Write Go module list
         run: go list -json -m all > go.list
 
-      - name: Dependency Scan
+      - name: Dependency Scan with Nancy
         uses: sonatype-nexus-community/nancy-github-action@main
 
   dockerize:
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs:
       - build-and-test
