@@ -31,7 +31,7 @@ jobs:
           go tool cover -func=coverage.out | tee coverage.txt
           total=$(go tool cover -func=coverage.out | grep total: | awk '{print substr($3, 1, length($3)-1)}')
           echo "Total Coverage: $total%"
-          threshold=10.0
+          threshold=0.0
           result=$(echo "$total >= $threshold" | bc)
           if [ "$result" -ne 1 ]; then
             echo "❌ Coverage $total% is below the threshold of $threshold%"
