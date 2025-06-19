@@ -1,11 +1,11 @@
 package main
 
 import (
+	"log"
+
 	"github.com/cappit/internal/config"
 	"github.com/cappit/internal/middleware"
 	"github.com/cappit/internal/routes"
-	"log"
-
 	"github.com/labstack/echo/v4"
 )
 
