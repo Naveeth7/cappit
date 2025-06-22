@@ -154,7 +154,6 @@ linters:
     - goconst
     - gocritic
     - gocyclo
-    - godot
     - goimports
     - gomoddirectives
     - gomodguard

@@ -12,7 +12,7 @@ import (
 	// "cappit/internal/proxy"
 )
 
-func Register(e *echo.Echo, db *pgxpool.Pool, rdb *redis.Client, cfg *config.Config) {
+func Register(e *echo.Echo, db *pgxpool.Pool, _ *redis.Client, _ *config.Config) {
 	v1 := e.Group("/v1") // base path as defined in Swagger
 
 	// --- API Keys ---
