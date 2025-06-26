@@ -2,7 +2,7 @@ package apikey
 
 import (
 	"context"
-	"errors"
+	"database/sql"
 	"fmt"
 
 	"github.com/cappit/internal/logger"
@@ -59,10 +59,11 @@ func (s *store) Insert(ctx context.Context, t *Tenant) error {
 func (s *store) DeleteByID(ctx context.Context, id string) error {
 	rows, err := s.db.Exec(ctx, deleteQuery, id)
 	if err != nil {
-		return err
+		logger.Error("DB error: failed to delete tenant ID", zap.Error(err))
+		return fmt.Errorf("db delete error: %w", err)
 	}
 	if rows.RowsAffected() == 0 {
-		return errors.New("no rows affected")
+		return sql.ErrNoRows
 	}
 	return nil
 }
