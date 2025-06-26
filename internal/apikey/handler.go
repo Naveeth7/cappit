@@ -1,6 +1,8 @@
 package apikey
 
 import (
+	"database/sql"
+	"errors"
 	"net/http"
 
 	"github.com/cappit/internal/logger"
@@ -42,9 +44,16 @@ func (h *Handler) POST(c echo.Context) error {
 
 func (h *Handler) Delete(c echo.Context) error {
 	id := c.Param("id")
-	if err := h.service.DeleteAPIKey(c.Request().Context(), id); err != nil {
-		logger.Error("failed to delete API key", zap.Error(err))
+
+	err := h.service.DeleteAPIKey(c.Request().Context(), id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return echo.NewHTTPError(http.StatusNotFound, "API key not found")
+		}
+
+		logger.Error("DB error while deleting API key", zap.Error(err))
 		return echo.NewHTTPError(http.StatusBadRequest, "failed to delete API key")
 	}
+
 	return c.NoContent(http.StatusNoContent)
 }

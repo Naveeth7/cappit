@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/cappit/internal/util"
 	"github.com/google/uuid"
 )
 
@@ -20,7 +21,7 @@ func (s *service) ListAPIKeys(ctx context.Context) ([]*Tenant, error) {
 }
 
 func (s *service) CreateAPIKey(ctx context.Context, req CreateAPIKeyRequest) (*Tenant, error) {
-	now := time.Now()
+	now := time.Now().UTC()
 
 	t := &Tenant{
 		ID:        uuid.New(),
@@ -31,12 +32,23 @@ func (s *service) CreateAPIKey(ctx context.Context, req CreateAPIKeyRequest) (*T
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	if err := s.store.Insert(ctx, t); err != nil {
+
+	err := ValidateTenantInput(t.Name, t.BaseURL, t.CreatedAt, t.UpdatedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	if err = s.store.Insert(ctx, t); err != nil {
 		return nil, err
 	}
 	return t, nil
 }
 
 func (s *service) DeleteAPIKey(ctx context.Context, id string) error {
+	err := util.ValidateUUID(id)
+	if err != nil {
+		return err
+	}
+
 	return s.store.DeleteByID(ctx, id)
 }
